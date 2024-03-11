@@ -5,6 +5,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ContactDataController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\SocialNetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +51,32 @@ Route::middleware(['auth.active', 'auth:sanctum', config('jetstream.auth_session
     Route::delete(uri: '/seccions/{id}', action: [ SliderController::class, 'destroy' ])->name(name: 'sliders.destroy')->middleware([
         'permission:Destroy slider'
     ]);
+
+    //ContactData
+    Route::get(uri: '/contact/data', action: [ ContactDataController::class, 'index' ])->name(name: 'contactdata.index');
+    Route::post(uri: '/contact/{id}', action: [ ContactDataController::class, 'update' ])->name(name: 'contactdata.update');
+
+    //About
+    Route::get(uri: '/about', action: [AboutController::class, 'index'])->name(name: 'about.index');
+    Route::post(uri: '/about', action: [AboutController::class, 'store'])->name(name: 'about.store');
+    Route::put(uri: '/about/{id}', action: [AboutController::class, 'update'])->name(name: 'about.update');
+    Route::delete(uri: '/about/{id}', action: [AboutController::class, 'destroy'])->name(name: 'about.destroy');
+
+    //Service
+    Route::get(uri: '/service', action: [ServiceController::class, 'index'])->name(name: 'service.index');
+    Route::post(uri: '/service', action: [ServiceController::class, 'store'])->name(name: 'service.store');
+    Route::post(uri: '/service/{id}', action: [ServiceController::class, 'update'])->name(name: 'service.update');
+    Route::delete(uri: '/service/{id}', action: [ServiceController::class, 'destroy'])->name(name: 'service.destroy');
+
+    //Entity Testimonial
+    Route::get(uri: '/testimonial', action: [ TestimonialController::class, 'index' ])->name(name: 'testimonial.index');
+    Route::post(uri: '/testimonial', action: [ TestimonialController::class, 'store' ])->name(name: 'testimonial.store');
+    Route::post(uri: '/testimonial/{id}', action: [ TestimonialController::class, 'update' ])->name(name: 'testimonial.update');
+    Route::delete(uri: '/testimonial/{id}', action: [ TestimonialController::class, 'destroy' ])->name(name: 'testimonial.destroy');
+
+    //Entity Social net
+    Route::get(uri: '/socialnet', action: [ SocialNetController::class, 'index' ])->name('socialnet.index');
+    Route::put(uri: '/socialnet/{id}', action: [ SocialNetController::class, 'update' ])->name('socialnet.update');
 
     //Roles
     Route::get(uri: 'roles', action: [ RoleController::class, 'index'])->name(name: 'roles.index')->middleware([

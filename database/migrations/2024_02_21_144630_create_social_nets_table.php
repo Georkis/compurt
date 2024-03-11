@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string(column: 'name');
             $table->string(column: 'url');
+            $table->boolean(column: 'active');
             $table->timestamps();
         });
     }

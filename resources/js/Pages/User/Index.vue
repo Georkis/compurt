@@ -5,9 +5,6 @@
 </script>
 <script setup>
     import AppLayout from "@/Layouts/AppLayout.vue"
-    import {Link, router, useForm} from "@inertiajs/vue3"
-
-    import DangerButton from '@/Components/DangerButton.vue';
     import InputError from '@/Components/InputError.vue';
     import InputLabel from '@/Components/InputLabel.vue';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -16,6 +13,7 @@
     import WarningButton from '@/Components/WarningButton.vue';
     import SecondaryButton from '@/Components/SecondaryButton.vue';
     import Modal from '@/Components/Modal.vue';
+    import { useForm } from "@inertiajs/vue3";
     import Swal from 'sweetalert2';
     import VueTailwindPagination from '@ocrv/vue-tailwind-pagination';
     import { ref } from 'vue';
@@ -82,10 +80,12 @@
     const save = () =>{
         if(operation.value == 1){
 
-            form.post(route('users.store'),{
-                onSuccess: () => {ok('Usuario creado satisfactoriamente!')},
+            form.post(route('users.store'), {
+                onSuccess: () => {
+                    ok('Usuario creado satisfactoriamente!')
+                },
                 errorBag: 'ErrorUser'
-            });
+            })
         }
         else{
             form.put(route('users.update',id.value),{

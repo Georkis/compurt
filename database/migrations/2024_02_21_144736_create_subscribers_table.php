@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('subscribers', function (Blueprint $table) {
             $table->id();
-            $table->string(column: 'name');
             $table->string(column: 'email');
             $table->string(column: 'token');
             $table->date(column: 'dateExpire');

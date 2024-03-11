@@ -59,7 +59,7 @@ class UserController extends Controller
                 ->queue(mailable: $message);
 
         }catch (\Exception $exception){
-            return response()->json(data: $exception->getMessage(), status: 400);
+//            return response()->json(data: $exception->getMessage(), status: 400);
         }
 
 

@@ -2,92 +2,90 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SliderRequest;
-use App\Models\Slider;
+use App\Http\Requests\ServiceRequest;
+use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\Component;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class SliderController extends Controller
+class ServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(): Response
     {
-        $sliders = Slider::all();
-        return inertia(component: 'Slider/Index', props: ['sliders' => $sliders, 'url_slider' => env('APP_URL_STORAGE').'img/sliders/']);
+        $services = Service::all();
+        return Inertia::render(component: 'Service/Index', props: [
+            'services' => $services,
+            'url_service' => env('APP_URL_STORAGE').$this->getPath()
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SliderRequest $request)
+    public function store(ServiceRequest $request): void
     {
+        //todo save image and route store image
         $filename = $request->image->hashName();
         Storage::disk(name: 'public')->putFileAs(path: $this->getPath(), file: $request->file(key: 'image'), name: $filename);
 
-        $slider = new Slider(attributes: [
+        $service = new Service(attributes: [
             "title" => $request->request->get('title'),
             "content" => $request->request->get('content'),
             "image" => $filename
         ]);
-        $slider->save();
+        $service->save();
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): void
     {
         $request->validate([
-            'title' => 'required: true| max:5',
-            'content' => 'required: true| max:200'
+            'title' => 'required: true| max:30',
+            'content' => 'required: true| max:120'
         ]);
-        $slider = Slider::find($id);
+
+        $service = Service::find($id);
 
         if($request->image) {
             $request->validate([
                 'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:width=212,height=214',
             ]);
-
             $filename = $request->image->hashName();
-            Storage::disk(name: 'public')->delete(paths :$this->getPath().$slider->image);
+            Storage::disk(name: 'public')->delete(paths :$this->getPath().$service->image);
             Storage::disk(name: 'public')->putFileAs(path: $this->getPath(), file: $request->file(key: 'image'), name: $filename);
-            $slider->image = $filename;
+            $service->image = $filename;
         }
 
-        $slider->title = $request->request->get(key: 'title');
-        $slider->content = $request->request->get(key: 'content');
+        $service->title = $request->get(key: 'title');
+        $service->content = $request->get(key: 'content');
 
-        $slider->save();
+        $service->save();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id): void
+    public function destroy(string $id)
     {
-        $slider = Slider::find($id);
-        Storage::disk(name: 'public')->delete(paths: $this->getPath().$slider->image);
-        $slider->delete();
+        $service = Service::find($id);
+        Storage::disk(name: 'public')->delete(paths: $this->getPath().$service->image);
+        $service->delete();
     }
 
-    /**
-     * @param string $image
-     * @return string
-     */
     private function getPath(): string
     {
-        return 'img/sliders/';
+        return 'img/services/';
     }
 
-    //API REST
-    public function getSliders(): JsonResponse
+    public function getServices(): JsonResponse
     {
-        return new JsonResponse(Slider::all());
+        return new JsonResponse(Service::all());
     }
 }

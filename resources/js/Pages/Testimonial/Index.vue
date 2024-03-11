@@ -1,6 +1,6 @@
 <script>
 export default {
-    name: "SliderIndex"
+    name: "TestimonialIndex"
 };
 </script>
 
@@ -28,11 +28,11 @@ const id = ref('')
 
 
 defineProps({
-    sliders: {
+    testimonials: {
         type: Object,
         required: true
     },
-    url_slider: {
+    url_testimonial: {
         type: String,
         required: true
     }
@@ -40,23 +40,25 @@ defineProps({
 
 const form = useForm({
     id: '',
-    title: null,
+    name: null,
+    occupation: null,
     content: null,
     image: null
 })
 
-const openModal = (op, titulo, content,  image, sId) => {
+const openModal = (op, name, occupation, content,  image, sId) => {
     modal.value = true
     operation.value = op
     id.value = sId
 
     if(op == 1){
         form.reset()
-        title.value = 'Crear Slider'
+        title.value = 'Crear testimonio'
     }else {
-        title.value = 'Editar Slider'
+        title.value = 'Editar testimonio'
         form.id = sId
-        form.title = titulo
+        form.name = name
+        form.occupation = occupation
         form.content = content
     }
 }
@@ -69,17 +71,21 @@ const closeModal = () =>{
 const save = () =>{
     if (operation.value == 1){
 
-        form.post(route('sliders.store'), {
-            onSuccess: () =>{ ok('Slider ha sido creado satisfactoriamente!') },
+        form.post(route('testimonial.store'), {
+            onSuccess: () =>{ ok('El Testimonio ha sido creado satisfactoriamente!') },
             errorBag: 'Error 500',
             forceFormData: true,
             method: "POST",
             onError: (errors) =>{
-                if(errors.title){
-                    Swal.fire({title:errors.title,icon:'error'});
+                if(errors.name){
+                    Swal.fire({title:errors.name,icon:'error'});
                     return;
                 }
                 if(errors.content){
+                    Swal.fire({title:errors.ocupation,icon:'error'});
+                    return;
+                }
+                if(errors.ocupation){
                     Swal.fire({title:errors.content,icon:'error'});
                     return;
                 }
@@ -91,8 +97,8 @@ const save = () =>{
             }
         })
     }else{
-        form.post(route('sliders.update', form.id), {
-            onSuccess: () => { ok('Slider actualizado satisfactoriamente!') },
+        form.post(route('testimonial.update', form.id), {
+            onSuccess: () => { ok('El Testimonio se ha actualizado satisfactoriamente!') },
             errorBag: 'Error 500',
             forceFormData: true,
         })
@@ -106,7 +112,7 @@ const ok = (msj) =>{
     Swal.fire({title:msj,icon:'success'});
 }
 
-const deleteSlider = (sId, name) => {
+const deleteTestimonial = (sId, name) => {
     id.value = sId
     const alert = Swal.mixin({
         buttonsStyling: true
@@ -118,9 +124,9 @@ const deleteSlider = (sId, name) => {
         cancelButtonText: '<i class="fa-solid fa-ban"></i> Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            form.delete(route('sliders.destroy', id.value), {
+            form.delete(route('testimonial.destroy', id.value), {
                 onSuccess: () => {
-                    ok('Slider eliminado satisfactoriamente!')
+                    ok('El testimonio ha sido eliminado satisfactoriamente!')
                 }
             });
         }
@@ -130,16 +136,16 @@ const deleteSlider = (sId, name) => {
 </script>
 
 <template>
-    <AppLayout title="Slider">
+    <AppLayout title="Testimonio">
         <template #header>
-            <h1 class="py-2 font-semibold text-xl text-gray-800 leading-tight">Slider</h1>
+            <h1 class="py-2 font-semibold text-xl text-gray-800 leading-tight">Testimonio</h1>
         </template>
         <div class="py-2">
             <div class="max-w-7xl mx-auto sm:px-6 lg: px-8">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="flex justify-between">
                         <PrimaryButton @click="openModal(1)">
-                            <i class="fa-solid fa-plus-circle"></i> Crear Slider
+                            <i class="fa-solid fa-plus-circle"></i> Crear testimonio
                         </PrimaryButton>
                     </div>
                 </div>
@@ -147,24 +153,26 @@ const deleteSlider = (sId, name) => {
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                         <thead>
                         <tr class="bg-gray-50">
-                            <th class="px-6 py-3">Title</th>
-                            <th class="px-6 py-3">Content</th>
+                            <th class="px-6 py-3">Nombre</th>
+                            <th class="px-6 py-3">Ocupación</th>
+                            <th class="px-6 py-3">Contenido</th>
                             <th class="px-6 py-3">Imagen</th>
                             <th class="px-6 py-3">Acciones</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(s, index) in sliders" :key="index">
-                            <td class="px-6 py-4">{{ s.title }}</td>
+                        <tr v-for="(s, index) in testimonials" :key="index">
+                            <td class="px-6 py-4">{{ s.name }}</td>
+                            <td class="px-6 py-4">{{ s.occupation }}</td>
                             <td class="px-6 py-4">{{ s.content }}</td>
                             <td class="px-6 py-4">
-                                <img class="w-1/12 border-b-2 rounded" :src="`${url_slider}${s.image}`" :alt="s.title">
+                                <img class="w-1/12 border-b-2 rounded" :src="`${url_testimonial}${s.image}`" :alt="s.name">
                             </td>
                             <td>
-                                <WarningButton @click="openModal(2, s.title, s.content, s.image, s.id)">
+                                <WarningButton @click="openModal(2, s.name, s.occupation, s.content, s.image, s.id)">
                                     <i class="fa fa-edit"></i>
                                 </WarningButton>
-                                <DangerButton v-if="$page.props.user.permissions.includes('Destroy slider')" @click="deleteSlider(s.id, s.title)" class="mx-2">
+                                <DangerButton v-if="$page.props.user.permissions.includes('Destroy testimonial')" @click="deleteTestimonial(s.id, s.name)" class="mx-2">
                                     <i class="fa fa-trash"></i>
                                 </DangerButton>
                             </td>
@@ -177,11 +185,18 @@ const deleteSlider = (sId, name) => {
         <Modal :show="modal" @close="closeModal">
             <h2 class="p-3 text-lg font.medium text-hray-900">{{ title }}</h2>
             <div class="p-3">
-                <InputLabel for="title" value="Titulo:"></InputLabel>
-                <TextInput id="title" ref="nameInput"
-                           v-model="form.title" type="text" class="mt-1 block w-3/4"
-                           placeholder="Titulo"></TextInput>
-                <InputError :message="form.errors.title" class="mt-2"></InputError>
+                <InputLabel for="name" value="Name:"></InputLabel>
+                <TextInput id="name" ref="nameInput"
+                           v-model="form.name" type="text" class="mt-1 block w-3/4"
+                           placeholder="Name"></TextInput>
+                <InputError :message="form.errors.name" class="mt-2"></InputError>
+            </div>
+            <div class="p-3">
+              <InputLabel for="ocupation" value="Ocupación:"></InputLabel>
+              <TextInput id="ocupation"
+                         v-model="form.occupation" type="text" class="mt-1 block w-3/4"
+                         placeholder="Ocupación"></TextInput>
+              <InputError :message="form.errors.occupation" class="mt-2"></InputError>
             </div>
             <div class="p-3">
               <InputLabel for="content" value="Contenido:"></InputLabel>

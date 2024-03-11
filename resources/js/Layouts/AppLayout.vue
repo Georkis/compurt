@@ -67,6 +67,31 @@ const logout = () => {
                                 Slider
                               </NavLink>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="$page.props.user.permissions.includes('Read about')">
+                              <NavLink :href="route('about.index')" :active="route().current('about.*')">
+                                About
+                              </NavLink>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="$page.props.user.permissions.includes('Read service')">
+                                <NavLink :href="route('service.index')" :active="route().current('service.*')">
+                                    Servicios
+                                </NavLink>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="$page.props.user.permissions.includes('Read contact')">
+                                <NavLink :href="route('contactdata.index')" :active="route().current('contactdata.*')">
+                                    Contactos
+                                </NavLink>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="$page.props.user.permissions.includes('Read testimonial')">
+                                <NavLink :href="route('testimonial.index')" :active="route().current('testimonial.*')">
+                                    Testimonio
+                                </NavLink>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex" v-if="$page.props.user.permissions.includes('Read social net')">
+                                <NavLink :href="route('socialnet.index')" :active="route().current('socialnet.*')">
+                                    Red social
+                                </NavLink>
+                            </div>
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ms-6">

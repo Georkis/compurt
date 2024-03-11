@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
             RolesPermissionsSeeder::class,
 //            SliderSeeder::class,
             UserSeeder::class,
+            ContactDataSeeder::class,
+            SocialNetSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 
